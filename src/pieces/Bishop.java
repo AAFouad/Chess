@@ -1,0 +1,84 @@
+package pieces;
+import board.Position;
+
+import java.util.ArrayList;
+
+import static utils.Utils.isOut;
+
+public class Bishop extends Piece {
+
+    public Bishop(boolean isWhite){
+        super(isWhite);
+        if(isWhite){this.type = 'B';}
+        else { this.type = 'b';}
+    }
+
+    public char getType(){
+        return this.type;
+    }
+
+
+    @Override
+    public ArrayList<Integer> possibleMoves(Position pos, int start) {
+        if ( isOut(start) ){ return null; }
+
+        ArrayList<Integer> moves = new ArrayList<>();
+        int destination;
+
+        //North East
+        destination = start + 9;
+        while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
+            if( pos.squares[destination].hasEnemy( this.isWhite() ) ){
+                moves.add(destination);
+                break;
+            }
+            else {
+                moves.add(destination);
+            }
+            destination += 9;
+        }
+
+        //North West
+        destination = start + 7;
+        while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
+            if( pos.squares[destination].hasEnemy( this.isWhite() ) ){
+                moves.add(destination);
+                break;
+            }
+            else {
+                moves.add(destination);
+            }
+            destination += 7;
+        }
+
+        //South West
+        destination = start - 9;
+        while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
+            if( pos.squares[destination].hasEnemy( this.isWhite() ) ){
+                moves.add(destination);
+                break;
+            }
+            else {
+                moves.add(destination);
+            }
+            destination -= 9;
+        }
+
+        //South East
+        destination = start - 7;
+        while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
+            if( pos.squares[destination].hasEnemy( this.isWhite() ) ){
+                moves.add(destination);
+                break;
+            }
+            else {
+                moves.add(destination);
+            }
+            destination -= 7;
+        }
+
+        return moves;
+    }
+
+
+}
