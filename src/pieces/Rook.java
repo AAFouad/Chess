@@ -12,7 +12,6 @@ public class Rook extends Piece {
 
     public Rook(boolean isWhite){
         super(isWhite);
-        hasMoved = false;
         if(isWhite){ this.type = 'R';}
         else {this.type = 'r';}
     }
@@ -34,56 +33,53 @@ public class Rook extends Piece {
         //North
         destination = start + 8;
         while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
-            if( pos.squares[destination].hasEnemy( this.isWhite() ) ){
-                moves.add(destination);
+            moves.add(destination);
+            if( pos.squares[destination].hasEnemy(this.isWhite()) ){
                 break;
-            }
-            else {
-                moves.add(destination);
             }
             destination += 8;
         }
 
         //East
-        destination = start + 1;
-        while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
-            if( pos.squares[destination].hasEnemy( this.isWhite() ) ){
+        if( ! ( start % 8 == 7 ) ){
+            destination = start + 1;
+            while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
                 moves.add(destination);
-                break;
+                if( pos.squares[destination].hasEnemy(this.isWhite()) || destination % 8 == 7 ){
+                    break;
+                }
+                destination += 1;
             }
-            else {
-                moves.add(destination);
-            }
-            destination += 1;
         }
 
         //South
         destination = start - 8;
         while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
-            if( pos.squares[destination].hasEnemy( this.isWhite() ) ){
-                moves.add(destination);
+            moves.add(destination);
+            if( pos.squares[destination].hasEnemy(this.isWhite()) ){
                 break;
-            }
-            else {
-                moves.add(destination);
             }
             destination -= 8;
         }
 
         //West
-        destination = start - 1;
-        while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
-            if( pos.squares[destination].hasEnemy( this.isWhite() ) ){
+        if( ! ( start % 8 == 0 ) ){
+            destination = start - 1;
+            while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
                 moves.add(destination);
-                break;
+                if( pos.squares[destination].hasEnemy(this.isWhite()) || destination % 8 == 0 ){
+                    break;
+                }
+                destination -= 1;
             }
-            else {
-                moves.add(destination);
-            }
-            destination -= 1;
         }
 
         return moves;
+    }
+
+    @Override
+    public Piece clone() {
+        return new Rook(this.isWhite());
     }
 
 

@@ -1,8 +1,10 @@
 package board;
 import pieces.*;
 
-import static board.Square.*;
+import java.util.HashSet;
+
 import static utils.Utils.*;
+import static move.Move.*;
 
 public class Position {
     public static final int SIZE = 64;
@@ -14,6 +16,11 @@ public class Position {
     public boolean Q = false; //White Queenside Castle
     public boolean k = false; //Black Kingside Castle
     public boolean q = false; //Black Queenside Castle
+
+    public boolean whiteTurn;
+
+    public int wK; //White King's Index
+    public int bK; //Black King's Index
 
     //Constructors
     public Position(){
@@ -27,9 +34,32 @@ public class Position {
         fromFEN(FEN);
     }
 
+    public Position(Position another) {
+        this.whiteTurn = another.whiteTurn;
+        this.wK = another.wK;
+        this.bK = another.bK;
+
+        this.squares = new Square[SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            Piece p = null;
+            if (another.squares[i].getPiece() != null) {
+                p = another.squares[i].getPiece().clone();
+            }
+            this.squares[i] = new Square(i,p);
+        }
+    }
+
     private void fromFEN(String FEN){
 
-        String[] fenRanks = FEN.split("/");
+        String[] fenElements = FEN.split(" ");
+
+        switch(fenElements[1]){
+            case("w") :  this.whiteTurn = true; break;
+            case("b") :  this.whiteTurn = false; break;
+            default : System.out.println("Invalid FEN");
+        }
+
+        String[] fenRanks = fenElements[0].split("/");
         for( int i = 0; i < fenRanks.length; i++ ){
             int fldSqrs = 0; //filled squares count
             for(int j = 0; j < fenRanks[i].length(); j++ ) {
@@ -76,10 +106,12 @@ public class Position {
                         fldSqrs++;
                         break;
                     case 'K' :
+                        wK = toIndex(fldSqrs,7-i);
                         this.squares[toIndex(fldSqrs,7-i)].setPiece(new King(true));
                         fldSqrs++;
                         break;
                     case 'k' :
+                        bK = toIndex(fldSqrs,7-i);
                         this.squares[toIndex(fldSqrs,7-i)].setPiece(new King(false));
                         fldSqrs++;
                         break;
@@ -113,24 +145,98 @@ public class Position {
         }
     }
 
-    public void move(int start, int end){
+    public boolean simMove(int start, int end){
         if( isOut(start) || isOut(end) || squares[start].getPiece() == null ){
-            System.out.println("Invalid Square");
-            return;
+            return false;
         }
-        if( this.squares[start].getPiece().validMove(this, start, end ) ){
+        if( squares[start].getPiece().isWhite() == whiteTurn &&
+                squares[start].getPiece().validMove(this, start, end ) ){
+
+            if( squares[start].getPiece().getType() == 'K' ){
+                wK = end;
+            } else if ( squares[start].getPiece().getType() == 'k'){
+                bK = end;
+            }
+
             this.squares[end].setPiece( this.squares[start].getPiece() );
             this.squares[start].setPiece(null);
-            System.out.println("Moved!!");
+
+            this.whiteTurn = !this.whiteTurn;
+
+            return true;
         }
         else {
-            System.out.println("Invalid Move");
+            return false;
+        }
+    }
+
+    public void move(int start, int end){
+        if( isLegal(this, start, end) ){
+            this.simMove(start, end);
+            System.out.println("Moved!!");
+            if( this.isCheckMate() ){
+                System.out.println("CheckMate!!");
+            }
+            if( this.isStaleMate() ){
+                System.out.println("StaleMate!!");
+            }
+        }
+        else {
+            System.out.println("Invalid Move.");
         }
     }
     public void move(int iccf){
         int start = iccf / 100;
         int end = iccf % 100;
         move( ICCFtoIndex(start), ICCFtoIndex(end) );
+    }
+
+    public HashSet<Integer> allPossibleMoves(boolean white){
+        HashSet<Integer> moves = new HashSet<Integer>();
+        for(int i = 0; i < SIZE; i ++){
+            if( squares[i].getPiece() != null &&
+                    squares[i].getPiece().isWhite() == white ){
+                moves.addAll( squares[i].getPiece().possibleMoves(this, i) );
+            }
+        }
+        return moves;
+    }
+
+    public boolean isCheckMate(){
+        for(int i = 0; i < SIZE; i++){
+            if( !squares[i].isEmpty() &&
+                    squares[i].getPiece().isWhite() == this.whiteTurn ){
+                if(squares[i].getPiece().possibleMoves(this,i) != null){
+                    for( Integer j : squares[i].getPiece().possibleMoves(this,i) ){
+                        if( isLegal(this,i,j) ){ return false; }
+                    }
+                }
+            }
+        }
+
+        if( whiteTurn ){
+            return allPossibleMoves( !whiteTurn ).contains( wK );
+        } else {
+            return allPossibleMoves( !whiteTurn ).contains( bK );
+        }
+    }
+    public boolean isStaleMate(){
+        for(int i = 0; i < SIZE; i++){
+            if( !squares[i].isEmpty() &&
+                    squares[i].getPiece().isWhite() == this.whiteTurn ){
+                if(squares[i].getPiece().possibleMoves(this,i) != null){
+                    for( Integer j : squares[i].getPiece().possibleMoves(this,i) ){
+                        if( isLegal(this,i,j) ){ return false; }
+                    }
+                }
+            }
+        }
+
+        if( whiteTurn ){
+            return !allPossibleMoves( !whiteTurn ).contains( wK );
+        } else {
+            return !allPossibleMoves( !whiteTurn ).contains( bK );
+        }
     }
 
 

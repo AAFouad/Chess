@@ -24,5 +24,7 @@ public abstract class Piece {
         return this.possibleMoves(pos, start).contains(end) ;
     }
 
+    abstract public Piece clone();
+
 
 }

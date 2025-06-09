@@ -8,7 +8,6 @@ public class King extends Piece {
 
     public King(boolean isWhite){
         super(isWhite);
-        hasMoved = false;
         if(isWhite){this.type = 'K';}
         else{this.type = 'k';}
     }
@@ -30,7 +29,12 @@ public class King extends Piece {
                         start - 9 , start - 8 , start - 7 ,
                         start + 1 , start - 1 )
         );
-        int castlePath;
+        if( start % 8 == 7 ){
+            destinations.removeAll(Arrays.asList( start + 9 , start + 1 , start - 7 ));
+        } else if ( start % 8 == 0 ){
+            destinations.removeAll(Arrays.asList( start + 7 , start - 1 , start - 9 ));
+        }
+        //int castlePath;
 
         for ( Integer i : destinations ){
             if( !isOut(i) && !pos.squares[i].hasFriend( this.isWhite() ) ){
@@ -40,6 +44,11 @@ public class King extends Piece {
 
 
         return moves;
+    }
+
+    @Override
+    public Piece clone() {
+        return new King(this.isWhite());
     }
 
     public boolean validCastle(Position pos, int start, int end){

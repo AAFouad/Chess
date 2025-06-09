@@ -25,59 +25,59 @@ public class Bishop extends Piece {
         ArrayList<Integer> moves = new ArrayList<>();
         int destination;
 
-        //North East
-        destination = start + 9;
-        while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
-            if( pos.squares[destination].hasEnemy( this.isWhite() ) ){
+        //East
+        if( ! ( start % 8 == 7 ) ){
+            //North East
+            destination = start + 9;
+            while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
                 moves.add(destination);
-                break;
+                if( pos.squares[destination].hasEnemy(this.isWhite()) || destination % 8 == 7 ){
+                    break;
+                }
+                destination += 9;
             }
-            else {
+
+            //South East
+            destination = start - 7;
+            while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
                 moves.add(destination);
+                if( pos.squares[destination].hasEnemy(this.isWhite()) || destination % 8 == 7 ){
+                    break;
+                }
+                destination -= 7;
             }
-            destination += 9;
         }
 
-        //North West
-        destination = start + 7;
-        while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
-            if( pos.squares[destination].hasEnemy( this.isWhite() ) ){
-                moves.add(destination);
-                break;
-            }
-            else {
-                moves.add(destination);
-            }
-            destination += 7;
-        }
+        //West
+        if( ! ( start % 8 == 0 ) ){
 
-        //South West
-        destination = start - 9;
-        while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
-            if( pos.squares[destination].hasEnemy( this.isWhite() ) ){
+            //North West
+            destination = start + 7;
+            while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
                 moves.add(destination);
-                break;
+                if( pos.squares[destination].hasEnemy(this.isWhite()) || destination % 8 == 0 ){
+                    break;
+                }
+                destination += 7;
             }
-            else {
-                moves.add(destination);
-            }
-            destination -= 9;
-        }
 
-        //South East
-        destination = start - 7;
-        while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
-            if( pos.squares[destination].hasEnemy( this.isWhite() ) ){
+            //South West
+            destination = start - 9;
+            while( !isOut(destination) && !pos.squares[destination].hasFriend(this.isWhite()) ){
                 moves.add(destination);
-                break;
+                if( pos.squares[destination].hasEnemy(this.isWhite()) || destination % 8 == 0 ){
+                    break;
+                }
+                destination -= 9;
             }
-            else {
-                moves.add(destination);
-            }
-            destination -= 7;
         }
 
         return moves;
+    }
+
+    @Override
+    public Piece clone() {
+        return new Bishop(this.isWhite());
     }
 
 

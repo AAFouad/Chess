@@ -21,6 +21,10 @@ public class Square {
         else { isLight = true; }
 
     }
+    public Square(int INDEX, Piece piece){
+        this(INDEX);
+        this.piece = piece;
+    }
 
     //Getters
     public int getINDEX() { return INDEX; }

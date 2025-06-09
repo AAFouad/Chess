@@ -33,5 +33,10 @@ public class Queen extends Piece {
         return moves;
     }
 
+    @Override
+    public Piece clone() {
+        return new Queen(this.isWhite());
+    }
+
 
 }

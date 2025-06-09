@@ -23,43 +23,37 @@ public class Pawn extends Piece {
     public ArrayList<Integer> possibleMoves(Position pos, int start) {
         if( isOut(start) ) { return null; }
         ArrayList<Integer> moves = new ArrayList<>();
-        int destination = start;
+        int rank = start / 8;
+        int file = start % 8;
+        int direction = isWhite() ? 8 : -8;
+        int destination = start + direction;
+        if( pos.squares[destination].isEmpty() ){
+            moves.add(destination);
 
-        if(this.isWhite()){
-            if( start / 8  == 1 ){
-                for( int i = 0 ; i < 2 ; i++ ){
-                    destination += 8;
-                    if( pos.squares[destination].isEmpty() ){
-                        moves.add(destination);
-                    }
-                    else { break; }
-                }
-            }
-            destination += 8;
-            if( pos.squares[destination].isEmpty() ){
+            boolean atSecond = isWhite() ? (rank == 1) : (rank == 6);
+            destination = start + 2*direction;
+            if( atSecond && pos.squares[destination].isEmpty() ){
                 moves.add(destination);
             }
-            moves.add(destination);
-        }
-        else {
-            if( start / 8  == 6 ){
-                for( int i = 0 ; i < 2 ; i++ ){
-                    destination -= 8;
-                    if( pos.squares[destination].isEmpty() ){
-                        moves.add(destination);
-                    }
-                    else { break; }
-                }
-            }
-            destination -= 8;
-            if( pos.squares[destination].isEmpty() ){
-                moves.add(destination);
-            }
-            moves.add(destination);
         }
 
+        int[] dirs = { direction + 1 , direction - 1 };
+        for( int dir : dirs ){
+            destination = start + dir;
+            int destFile = destination % 8;
+            if( !isOut(destination) && Math.abs(destFile - file) == 1 ){
+                if( pos.squares[destination].hasEnemy(isWhite()) ){
+                    moves.add(destination);
+                }
+            }
+        }
 
         return moves;
+    }
+
+    @Override
+    public Piece clone() {
+        return new Pawn(this.isWhite());
     }
 
 
