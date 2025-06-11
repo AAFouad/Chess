@@ -1,9 +1,9 @@
-package pieces;
-import board.Position;
+package main.java.pieces;
+import main.java.board.Position;
 
 import java.util.ArrayList;
 
-import static utils.Utils.*;
+import static main.java.utils.Utils.*;
 
 public class Pawn extends Piece {
 
@@ -42,7 +42,7 @@ public class Pawn extends Piece {
             destination = start + dir;
             int destFile = destination % 8;
             if( !isOut(destination) && Math.abs(destFile - file) == 1 ){
-                if( pos.squares[destination].hasEnemy(isWhite()) ){
+                if( pos.squares[destination].hasEnemy(isWhite()) || destination == pos.ep ){
                     moves.add(destination);
                 }
             }

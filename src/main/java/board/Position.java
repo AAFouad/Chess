@@ -1,10 +1,10 @@
-package board;
-import pieces.*;
+package main.java.board;
+import main.java.pieces.*;
 
 import java.util.HashSet;
 
-import static utils.Utils.*;
-import static move.Move.*;
+import static main.java.utils.Utils.*;
+import static main.java.move.Move.*;
 
 public class Position {
     public static final int SIZE = 64;
@@ -16,6 +16,8 @@ public class Position {
     public boolean Q = false; //White Queenside Castle
     public boolean k = false; //Black Kingside Castle
     public boolean q = false; //Black Queenside Castle
+
+    public int ep = -1;
 
     public boolean whiteTurn;
 
@@ -38,6 +40,7 @@ public class Position {
         this.whiteTurn = another.whiteTurn;
         this.wK = another.wK;
         this.bK = another.bK;
+        this.ep = another.ep;
 
         this.squares = new Square[SIZE];
         for (int i = 0; i < SIZE; i++) {
@@ -49,6 +52,7 @@ public class Position {
         }
     }
 
+    //Methods
     private void fromFEN(String FEN){
 
         String[] fenElements = FEN.split(" ");
@@ -145,20 +149,64 @@ public class Position {
         }
     }
 
-    public boolean simMove(int start, int end){
+    public boolean simMove(int start, int end, int promoType){
         if( isOut(start) || isOut(end) || squares[start].getPiece() == null ){
             return false;
         }
-        if( squares[start].getPiece().isWhite() == whiteTurn &&
-                squares[start].getPiece().validMove(this, start, end ) ){
+        Piece p = squares[start].getPiece();
+        if( p.isWhite() == whiteTurn && p.validMove(this, start, end ) ){
 
-            if( squares[start].getPiece().getType() == 'K' ){
+            this.ep = -1;
+
+            //if pawn for en passant and promotion
+            if( Character.toLowerCase( p.getType() ) == 'p' ){
+                int dir = Math.abs(start - end);
+
+                //set new en passant square
+                if( dir == 16 ){
+                    this.ep = p.isWhite() ? end - 8 : end + 8;
+                }
+
+                //do en passant
+                boolean isCapture = dir == 9 || dir == 7;
+                int target = p.isWhite() ? end - 8 : end + 8;
+                if( isCapture && squares[end].isEmpty() ){
+                    this.squares[end].setPiece( p );
+                    this.squares[start].setPiece(null);
+                    this.squares[target].setPiece(null);
+                    return true;
+                }
+
+                //do promotion
+                int lastRank = p.isWhite() ? 7 : 0;
+                int endRank = end / 8;
+                if( lastRank == endRank ){
+                    switch(promoType){
+                        case(1):
+                            this.squares[end].setPiece( new Queen(p.isWhite()) ); break;
+                        case(2):
+                            this.squares[end].setPiece( new Rook(p.isWhite()) ); break;
+                        case(3):
+                            this.squares[end].setPiece( new Bishop(p.isWhite()) ); break;
+                        case(4):
+                            this.squares[end].setPiece( new Knight(p.isWhite()) ); break;
+                        default:
+                            return false;
+                    }
+                    this.squares[start].setPiece(null);
+                    this.whiteTurn = !this.whiteTurn;
+                    return true;
+                }
+            }
+
+            //if king for updating king's index
+            if( p.getType() == 'K' ){
                 wK = end;
-            } else if ( squares[start].getPiece().getType() == 'k'){
+            } else if ( p.getType() == 'k'){
                 bK = end;
             }
 
-            this.squares[end].setPiece( this.squares[start].getPiece() );
+            this.squares[end].setPiece( p );
             this.squares[start].setPiece(null);
 
             this.whiteTurn = !this.whiteTurn;
@@ -169,10 +217,13 @@ public class Position {
             return false;
         }
     }
+    public boolean simMove(int start, int end){
+        return simMove(start, end, 1);
+    }
 
-    public void move(int start, int end){
+    public void move(int start, int end, int promoType){
         if( isLegal(this, start, end) ){
-            this.simMove(start, end);
+            this.simMove(start, end, promoType);
             System.out.println("Moved!!");
             if( this.isCheckMate() ){
                 System.out.println("CheckMate!!");
@@ -185,10 +236,21 @@ public class Position {
             System.out.println("Invalid Move.");
         }
     }
+    public void move(int start, int end){
+        move(start, end, 1);
+    }
     public void move(int iccf){
-        int start = iccf / 100;
-        int end = iccf % 100;
-        move( ICCFtoIndex(start), ICCFtoIndex(end) );
+        if( iccf >= 1000 && iccf <= 9999 ){
+            int start = iccf / 100;
+            int end = iccf % 100;
+            move( ICCFtoIndex(start), ICCFtoIndex(end) );
+        }
+        else if ( iccf >= 10000 && iccf <= 99999 ){
+            int start = iccf / 1000;
+            int end = ( iccf % 1000 ) / 10;
+            int promoType = iccf % 10;
+            move ( ICCFtoIndex(start), ICCFtoIndex(end), promoType );
+        }
     }
 
     public HashSet<Integer> allPossibleMoves(boolean white){

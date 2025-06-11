@@ -1,9 +1,9 @@
-package pieces;
-import board.Position;
+package main.java.pieces;
+import main.java.board.Position;
 
 import java.util.*;
 
-import static utils.Utils.*;
+import static main.java.utils.Utils.*;
 
 public class Knight extends Piece{
 

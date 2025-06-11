@@ -1,9 +1,8 @@
-package pieces;
+package main.java.pieces;
 
-import board.Position;
+import main.java.board.Position;
 
 import java.util.ArrayList;
-import utils.Utils.*;
 
 public abstract class Piece {
     private final boolean isWhite;

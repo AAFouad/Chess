@@ -1,6 +1,6 @@
-package move;
+package main.java.move;
 
-import board.Position;
+import main.java.board.Position;
 
 public class Move {
 

@@ -1,5 +1,5 @@
-package board;
-import pieces.*;
+package main.java.board;
+import main.java.pieces.*;
 
 public class Square {
     private final int INDEX;
