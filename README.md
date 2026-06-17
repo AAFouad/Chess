@@ -1,6 +1,6 @@
-# Chess Engine
+# Chess Game Implementation
 
-A complete, fully-functional chess engine implementation written in Java. This project provides a robust chess game engine with support for FEN (Forsyth-Edwards Notation) notation, legal move generation, and an interactive command-line interface for playing chess.
+A complete, fully-functional chess game library written in Java. This project provides a robust implementation of chess rules with support for FEN (Forsyth-Edwards Notation) notation, legal move generation, and an interactive command-line interface for playing chess against another human player.
 
 ## Features
 
@@ -15,7 +15,7 @@ A complete, fully-functional chess engine implementation written in Java. This p
 
 - **Legal Move Generation**: Generates and validates all legal moves for any position
 
-- **Interactive CLI**: Command-line interface for interactive chess gameplay
+- **Interactive CLI**: Command-line interface for two-player chess gameplay
 
 - **ICCF Notation**: Supports ICCF numeric notation for move input and piece selection
 
@@ -107,6 +107,15 @@ src/
 
 ✅ **Project Status**: Complete and functional
 
+## Potential Extensions
+
+This library can be extended with additional features such as:
+- Artificial intelligence for computer opponent
+- Move history and undo functionality
+- Game state analysis and position evaluation
+- Graphical user interface (GUI)
+- PGN (Portable Game Notation) support
+
 ## License
 
 This project is provided as-is for educational and personal use.
@@ -117,4 +126,4 @@ Created by AAFouad
 
 ---
 
-**Note**: This is a fully implemented chess engine suitable for learning chess programming concepts, game development, or as a foundation for chess AI/solver projects.
+**Note**: This is a fully implemented chess game library suitable for learning chess programming concepts, game development, or as a foundation for more advanced chess applications.
