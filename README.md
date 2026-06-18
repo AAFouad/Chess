@@ -1,6 +1,6 @@
 # Chess Game Implementation
 
-A complete, fully-functional chess game library written in Java. This project provides a robust implementation of chess rules with support for FEN (Forsyth-Edwards Notation) notation, legal move generation, and more.
+A complete, fully-functional chess game library written in Java. This project provides a robust implementation of chess rules with support for FEN (Forsyth-Edwards Notation) notation, legal move generation, and an interactive command-line interface.
 
 ## Features
 
@@ -52,11 +52,11 @@ Once running, you'll be presented with options to:
 
 Below are screenshots demonstrating the interactive chess game in action:
 
-![Chess Game - Standard Starting Position](https://imgur.com/PLACEHOLDER1.png)
+![Chess Game - Standard Starting Position](images/Screenshot%202026-06-18%20210048.png)
 
-![Chess Game - Custom FEN Position](https://imgur.com/PLACEHOLDER2.png)
+![Chess Game - Custom FEN Position](images/Screenshot%202026-06-18%20210439.png)
 
-![Chess Game - Checkmate Detection](https://imgur.com/PLACEHOLDER3.png)
+![Chess Game - Checkmate Detection](images/Screenshot%202026-06-18%20210522.png)
 
 ### Available Commands
 
