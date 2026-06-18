@@ -52,11 +52,11 @@ Once running, you'll be presented with options to:
 
 Below are screenshots demonstrating the interactive chess game in action:
 
-![Chess Game - Standard Starting Position](https://github.com/AAFouad/Chess/raw/master/images/1.png)
+![Chess Game - Standard Starting Position](https://imgur.com/PLACEHOLDER1.png)
 
-![Chess Game - Custom FEN Position](https://github.com/AAFouad/Chess/raw/master/images/2.png)
+![Chess Game - Custom FEN Position](https://imgur.com/PLACEHOLDER2.png)
 
-![Chess Game - Checkmate Detection](https://github.com/AAFouad/Chess/raw/master/images/3.png)
+![Chess Game - Checkmate Detection](https://imgur.com/PLACEHOLDER3.png)
 
 ### Available Commands
 
